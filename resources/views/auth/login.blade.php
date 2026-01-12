@@ -1,107 +1,102 @@
-{{-- <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TechVente | Login</title>
-    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
-</head>
-<body class="auth-body">
-
-    <div class="auth-container">
-        <div class="auth-card">
-            <img src="{{ asset('images/logo.png') }}" alt="TechVente Logo" class="auth-logo">
-            <h2> Login</h2>
-
-            @if(session('error'))
-                <p class="error">{{ session('error') }}</p>
-            @endif
-
-            <form action="{{ route('login.post') }}" method="POST">
-                @csrf
-                <div class="form-group">
-                    <label>Email:</label>
-                    <input type="email" name="email" placeholder="Enter your email" required>
-                </div>
-
-                <div class="form-group">
-                    <label>Password:</label>
-                    <input type="password" name="password" placeholder="Enter your password" required>
-                </div>
-
-                <button type="submit" class="btn-primary">Login</button>
-            </form>
-
-            <p class="switch-link">Don't have an account? 
-                <a href="{{ route('register') }}">Register</a>
-            </p>
-        </div>
-    </div>
-
-</body>
-</html>
-
-<style>
-    
-</style> --}}
-
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Connexions - TechVente</title>
+    <title>Connexion - TechVente</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="min-h-screen bg-gradient-to-br from-blue-900 via-blue-700 to-blue-500 flex items-center justify-center">
 
-    <div class="bg-white w-full max-w-md p-8 rounded-2xl shadow-2xl">
+<body class="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-900 via-purple-800 to-blue-700 px-4">
+
+    <!-- Card -->
+    <div class="w-full max-w-md bg-white/95 backdrop-blur-lg rounded-2xl shadow-2xl p-8 md:p-10">
+
         <!-- Logo -->
-        <div class="text-center mb-6">
-            <img src="{{ asset('images/logo.png') }}" alt="Logo TechVente" class="w-20 h-20 mx-auto rounded-full mb-3">
-            <h1 class="text-2xl font-bold text-gray-800">Connexion</h1>
-            <p class="text-gray-500 text-sm">Connectez-vous à votre compte TechVente</p>
+        <div class="text-center mb-8">
+            <img src="{{ asset('images/logo.png') }}" 
+                 alt="Logo TechVente"
+                 class="w-20 h-20 mx-auto rounded-full shadow-lg mb-4">
+            <h1 class="text-2xl md:text-3xl font-extrabold text-gray-800">
+                Connexion
+            </h1>
+            <p class="text-gray-500 text-sm mt-1">
+                Accédez à votre espace TechVente
+            </p>
         </div>
 
+        <!-- Erreurs -->
+        @if ($errors->any())
+            <div class="bg-red-100 border border-red-300 text-red-700 p-3 rounded-lg mb-4 text-sm">
+                <ul class="list-disc list-inside">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
+        @if (session('error'))
+            <div class="bg-red-100 border border-red-300 text-red-700 p-3 rounded-lg mb-4 text-sm">
+                {{ session('error') }}
+            </div>
+        @endif
+
         <!-- Formulaire -->
-        <form method="POST" action="{{ route('login.post') }}" class="space-y-4">
+        <form method="POST" action="{{ route('login.post') }}" class="space-y-5">
             @csrf
 
             <!-- Email -->
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Adresse e-mail</label>
-                <input type="email" name="email" required autofocus
-                    class="w-full border border-gray-300 rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 outline-none">
+                <label class="block text-sm font-semibold text-gray-700 mb-1">
+                    Adresse e-mail
+                </label>
+                <input type="email" name="email" value="{{ old('email') }}" required autofocus
+                    class="w-full rounded-xl border border-gray-300 px-4 py-3 text-sm
+                           focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition">
             </div>
 
-            <!-- Password -->
+            <!-- Mot de passe -->
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Mot de passe</label>
+                <label class="block text-sm font-semibold text-gray-700 mb-1">
+                    Mot de passe
+                </label>
                 <input type="password" name="password" required
-                    class="w-full border border-gray-300 rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 outline-none">
+                    class="w-full rounded-xl border border-gray-300 px-4 py-3 text-sm
+                           focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition">
             </div>
-''
-            <!-- Remember -->
+
+            <!-- Options -->
             <div class="flex items-center justify-between text-sm">
-                <label class="flex items-center">
-                    <input type="checkbox" name="remember" class="mr-2 accent-blue-600">
+                <label class="flex items-center gap-2 text-gray-600">
+                    <input type="checkbox" name="remember"
+                           class="accent-indigo-600 rounded">
                     Se souvenir de moi
                 </label>
-                <a href="#" class="text-blue-600 hover:underline">Mot de passe oublié ?</a>
+
+                @if (Route::has('password.request'))
+                    <a href="{{ route('password.request') }}"
+                       class="text-indigo-600 font-medium hover:underline">
+                        Mot de passe oublié ?
+                    </a>
+                @endif
             </div>
 
             <!-- Bouton -->
             <button type="submit"
-                class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 rounded-lg transition">
+                class="w-full bg-gradient-to-r from-indigo-600 to-purple-600
+                       hover:from-indigo-700 hover:to-purple-700
+                       text-white font-bold py-3 rounded-xl shadow-lg
+                       transition transform hover:-translate-y-0.5">
                 Se connecter
             </button>
 
-            <!-- Lien vers l'inscription -->
-            <p class="text-center text-sm text-gray-600 mt-4">
+            <!-- Inscription -->
+            <p class="text-center text-sm text-gray-600 pt-4">
                 Pas encore de compte ?
-                <a href="{{ route('register') }}" class="text-blue-600 font-medium hover:underline">
-                    Créez un compte
+                <a href="{{ route('register') }}"
+                   class="text-indigo-600 font-semibold hover:underline">
+                    Créer un compte
                 </a>
             </p>
         </form>
@@ -109,4 +104,3 @@
 
 </body>
 </html>
-

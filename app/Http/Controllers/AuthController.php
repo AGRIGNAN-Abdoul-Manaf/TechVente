@@ -25,10 +25,10 @@ class AuthController extends Controller
         ]);
 
         // Tentative d'authentification
-        if (Auth::attempt($credentials)) {
-            $request->session()->regenerate();
-            return redirect()->intended('dashboard'); // redirection vers dashboard
-        }
+       if (Auth::attempt($credentials, $request->filled('remember'))) {
+    $request->session()->regenerate();
+    return redirect()->intended('/dashboard');
+}
 
         return back()->withErrors([
             'email' => 'Invalid credentials.',
@@ -54,6 +54,7 @@ class AuthController extends Controller
         User::create([
             'name' => $request->name,
             'email' => $request->email,
+            'phone' => $request->phone,
             'password' => Hash::make($request->password),
             'role' => 'seller', // par défaut seller
         ]);

@@ -16,14 +16,14 @@ class SaleController extends Controller
         $this->middleware('auth');
     }
 
-    // ✅ Liste des ventes
+    // Liste des ventes
     public function index()
     {
         $sales = Sale::with('client', 'user', 'orderLines.product')->paginate(10);
         return view('sales.index', compact('sales'));
     }
 
-    // ✅ Formulaire de création
+    // Formulaire création
     public function create()
     {
         $clients = Client::all();
@@ -31,7 +31,7 @@ class SaleController extends Controller
         return view('sales.create', compact('clients', 'products'));
     }
 
-    // ✅ Enregistrement d'une nouvelle vente
+    // Enregistrement d'une nouvelle vente
     public function store(Request $request)
     {
         $request->validate([
@@ -42,7 +42,6 @@ class SaleController extends Controller
         ]);
 
         $total = 0;
-
         foreach ($request->products as $productId) {
             $product = Product::find($productId);
             $qty = $request->quantities[$productId] ?? 0;
@@ -71,17 +70,10 @@ class SaleController extends Controller
             $product->decrement('stock', $qty);
         }
 
-        return redirect()->route('sales.index')->with('success', 'La vente a été enregistrée avec succès.');
+        return redirect()->route('sales.receipt', $sale->id);
     }
 
-    // ✅ Afficher une vente
-    public function show(Sale $sale)
-    {
-        $sale->load('client', 'user', 'orderLines.product');
-        return view('sales.show', compact('sale'));
-    }
-
-    // ✅ Modifier une vente
+    // Modifier une vente
     public function edit(Sale $sale)
     {
         $clients = Client::all();
@@ -89,7 +81,7 @@ class SaleController extends Controller
         return view('sales.edit', compact('sale', 'clients', 'products'));
     }
 
-    // ✅ Mise à jour d'une vente
+    // Mise à jour
     public function update(Request $request, Sale $sale)
     {
         $request->validate([
@@ -128,20 +120,27 @@ class SaleController extends Controller
             $product->decrement('stock', $qty);
         }
 
-        return redirect()->route('sales.index')->with('success', 'La vente a été mise à jour avec succès.');
+        return redirect()->route('sales.index')->with('success', 'La vente a été mise à jour.');
     }
 
-    // ✅ Suppression
+    // Suppression
     public function destroy(Sale $sale)
     {
         $sale->delete();
         return redirect()->route('sales.index')->with('success', 'La vente a été supprimée.');
     }
 
+    // Reçu
     public function receipt($id)
-{
-    $sale = Sale::with('client', 'products')->findOrFail($id);
-    return view('sales.receipt', compact('sale'));
-}
+    {
+        $sale = Sale::with('client', 'orderLines.product')->findOrFail($id);
+        return view('sales.receipt', compact('sale'));
+    }
 
+    // Impression
+    public function print($id)
+    {
+        $sale = Sale::with('client', 'orderLines.product')->findOrFail($id);
+        return view('sales.print', compact('sale'));
+    }
 }

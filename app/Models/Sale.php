@@ -37,4 +37,15 @@ class Sale extends Model
     {
         return $this->hasMany(OrderLine::class);
     }
+
+    // Relation vers les produits à travers orderLines
+    public function products()
+    {
+        return $this->belongsToMany(
+            Product::class,          // Modèle lié
+            'order_lines',           // Table pivot
+            'sale_id',               // Clé étrangère dans order_lines pour Sale
+            'product_id'             // Clé étrangère dans order_lines pour Product
+        )->withPivot('quantity', 'price'); // récupère quantité et prix si nécessaire
+    }
 }

@@ -26,7 +26,7 @@
         <div class="mb-5">
             <label for="client_id" class="block text-sm font-medium text-gray-700 mb-2">Client</label>
             <select id="client_id" name="client_id" class="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-500">
-                <option value="">-- Sélectionner un client --</option>
+                <option value=""> Sélectionner un client </option>
                 @foreach ($clients as $client)
                     <option value="{{ $client->id }}" {{ old('client_id') == $client->id ? 'selected' : '' }}>
                         {{ $client->name }}
@@ -65,7 +65,7 @@
         <div class="mb-6">
             <label for="payment_method" class="block text-sm font-medium text-gray-700 mb-2">Mode de paiement</label>
             <select id="payment_method" name="payment_method" class="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-500">
-                <option value="">-- Sélectionner le mode de paiement --</option>
+                <option value=""> Sélectionner le mode de paiement </option>
                 <option value="cash" {{ old('payment_method') == 'cash' ? 'selected' : '' }}>Espèces</option>
                 <option value="card" {{ old('payment_method') == 'card' ? 'selected' : '' }}>Carte bancaire</option>
                 <option value="mobile_money" {{ old('payment_method') == 'mobile_money' ? 'selected' : '' }}>Mobile Money</option>

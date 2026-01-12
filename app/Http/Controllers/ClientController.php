@@ -28,31 +28,34 @@ class ClientController extends Controller
     /**
      * Affiche le formulaire de création d’un client
      */
-    public function create()
+     public function create()
     {
-        return view('clients.create');
+        return view('clients.create'); // correspond au fichier Blade
     }
 
-    /**
-     * Enregistre un nouveau client
-     */
+    // Enregistre le client
     public function store(Request $request)
     {
+        // Validation
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:clients,email',
-            'phone' => 'nullable|string|max:20',
-            'address' => 'nullable|string|max:255',
+            'phone' => 'required|string|max:20',
+            'address' => 'nullable|string|max:500',
         ]);
 
-        Client::create($request->only(['name', 'email', 'phone', 'address']));
+        // Création
+        Client::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'address' => $request->address,
+        ]);
 
-        return redirect()->route('clients.index')->with('success', 'Client ajouté avec succès.');
+        return redirect()->route('clients.create')
+                         ->with('success', 'Client ajouté avec succès !');
     }
-
-    /**
-     * Affiche les détails d’un client
-     */
+     
     public function show(Client $client)
     {
         return view('clients.show', compact('client'));
@@ -103,5 +106,11 @@ class ClientController extends Controller
 
     return view('clients.history', compact('client', 'sales'));
 }
+
+public function dashboard()
+{
+    return view('client.dashboard');
+}
+
 
 }

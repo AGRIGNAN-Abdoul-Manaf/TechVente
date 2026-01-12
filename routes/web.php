@@ -8,15 +8,16 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SaleController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\RapportController;
+use App\Http\Controllers\ForgotPasswordController;
+use App\Http\Controllers\ResetPasswordController;
 
 /*
 |--------------------------------------------------------------------------
 | Web Routes
 |--------------------------------------------------------------------------
 |
-| Ici se trouvent toutes les routes de ton application web Laravel.
-| Les routes publiques (login/register) sont en dehors du middleware auth.
-| Les routes protégées (dashboard, produits, clients, etc.) nécessitent une connexion.
+| Routes publiques (login/register) et routes protégées (auth)
 |
 */
 
@@ -39,35 +40,68 @@ Route::post('/register', [AuthController::class, 'register'])->name('register.po
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // ------------------------------------------------------
-// 🔒 ROUTES PROTÉGÉES (seulement pour les utilisateurs connectés)
+// 🔑 MOT DE PASSE OUBLIÉ / RÉINITIALISATION
+// ------------------------------------------------------
+Route::get('/forgot-password', [ForgotPasswordController::class, 'showForm'])
+    ->name('password.request');
+
+Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetLink'])
+    ->name('password.email');
+
+Route::get('/reset-password/{token}', [ResetPasswordController::class, 'showResetForm'])
+    ->name('password.reset');
+
+Route::post('/reset-password', [ResetPasswordController::class, 'resetPassword'])
+    ->name('password.update');
+
+// ------------------------------------------------------
+// 🔒 ROUTES PROTÉGÉES (utilisateur connecté)
 // ------------------------------------------------------
 Route::middleware(['auth'])->group(function () {
 
     // 🏠 Tableau de bord
-   Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
     // 📦 Produits CRUD
     Route::resource('products', ProductController::class);
 
     // 👥 Clients CRUD
     Route::resource('clients', ClientController::class);
 
-    // 💰 Ventes CRUD
+    // 💰 Ventes CRUD + routes spécifiques
     Route::resource('sales', SaleController::class);
-    Route::get('/sales/{id}/receipt', [App\Http\Controllers\SaleController::class, 'receipt'])->name('sales.receipt');
-
-    
+    Route::get('/sales/{id}/receipt', [SaleController::class, 'receipt'])->name('sales.receipt');
+    Route::get('/sales/{id}/print', [SaleController::class, 'print'])->name('sales.print');
 
     // 📊 Rapports CRUD
     Route::resource('reports', ReportController::class);
 
-Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-Route::post('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    // 👤 Profil utilisateur
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::post('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
 
-// Historique des achats d’un client
-Route::get('/clients/{client}/history', [App\Http\Controllers\ClientController::class, 'history'])
-    ->name('clients.history')
-    ->middleware('auth');
+    // 🧾 Historique des achats d’un client
+    Route::get('/clients/{client}/history', [ClientController::class, 'history'])
+        ->name('clients.history');
+        // Page d'accueil publique
+        // Route pour la page Termes et Conditions
+Route::get('/terms', function () {
+    return view('terms');
+})->name('terms');
+
+Route::get('/privacy', function () {
+    return view('privacy');
+})->name('privacy');
+// Route publique pour afficher tous les produits
+Route::get('/produits', [App\Http\Controllers\ProductController::class, 'publicIndex'])->name('products.public');
 
 
+Route::get('/produits', [ProductController::class, 'publicIndex'])
+    ->name('products.public');
+
+    
+
+    
 
 });
