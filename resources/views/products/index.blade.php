@@ -7,10 +7,43 @@
     <h1 class="text-2xl font-bold text-green-700 mb-4">Liste des Produits</h1>
 
     <!-- Bouton Ajouter -->
-    <a href="{{ route('products.create') }}"
-       class="bg-green-600 text-white px-4 py-2 rounded mb-4 inline-block hover:bg-green-700">
-        ➕ Ajouter un produit
-    </a>
+    <div class="flex flex-col md:flex-row justify-between items-center mb-4">
+        <!-- Bouton Ajouter -->
+        <a href="{{ route('products.create') }}"
+           class="bg-green-600 text-white px-4 py-2 rounded inline-block hover:bg-green-700 mb-2 md:mb-0">
+             Ajouter un produit
+        </a>
+
+        <!-- Formulaire de filtrage -->
+        <form method="GET" action="{{ route('products.index') }}" class="flex space-x-2">
+            <!-- Recherche par nom -->
+            <input type="text" name="search" value="{{ request('search') }}" placeholder="Nom..." 
+                   class="border border-gray-300 rounded px-2 py-2 focus:outline-none focus:border-green-500 w-32">
+            
+            <!-- Prix Min/Max -->
+            <input type="number" name="min_price" value="{{ request('min_price') }}" placeholder="Min FCFA" 
+                   class="border border-gray-300 rounded px-2 py-2 focus:outline-none focus:border-green-500 w-24">
+            <input type="number" name="max_price" value="{{ request('max_price') }}" placeholder="Max FCFA" 
+                   class="border border-gray-300 rounded px-2 py-2 focus:outline-none focus:border-green-500 w-24">
+
+            <!-- Filtre par catégorie -->
+            <select name="category_id" class="border border-gray-300 rounded px-4 py-2 focus:outline-none focus:border-green-500">
+                <option value="">Toutes les catégories</option>
+                @foreach($categories as $cat)
+                    <option value="{{ $cat->id }}" {{ request('category_id') == $cat->id ? 'selected' : '' }}>
+                        {{ $cat->name }}
+                    </option>
+                @endforeach
+            </select>
+
+            <!-- Bouton Filtrer -->
+            <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+                Filtrer
+            </button>
+            
+
+        </form>
+    </div>
 
     <div class="overflow-x-auto">
         <table class="min-w-full bg-white border border-gray-200 shadow-md rounded-lg">

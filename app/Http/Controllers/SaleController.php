@@ -70,7 +70,7 @@ class SaleController extends Controller
             $product->decrement('stock', $qty);
         }
 
-        return redirect()->route('sales.receipt', $sale->id);
+        return redirect()->route('sales.index')->with('success', 'Vente enregistrée avec succès.');
     }
 
     // Modifier une vente

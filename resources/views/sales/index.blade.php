@@ -13,7 +13,7 @@
     <!-- Bouton ajouter -->
     <a href="{{ route('sales.create') }}"
        class="bg-green-600 text-white px-5 py-2 rounded-lg inline-block mb-6 hover:bg-green-700 transition">
-        ➕ Ajouter une vente
+         Ajouter une vente
     </a>
 
     <!-- Table responsive -->

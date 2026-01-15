@@ -20,10 +20,34 @@ class ProductController extends Controller
         $this->middleware('auth');
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $products = Product::with('category')->get();
-        return view('products.index', compact('products'));
+        $query = Product::with('category');
+
+        // Filtrage par catégorie
+        if ($request->filled('category_id')) {
+            $query->where('category_id', $request->category_id);
+        }
+
+        // Filtrage par nom (recherche)
+        if ($request->filled('search')) {
+            $query->where('name', 'like', '%' . $request->search . '%');
+        }
+
+        // Filtrage par prix minimum
+        if ($request->filled('min_price')) {
+            $query->where('price', '>=', $request->min_price);
+        }
+
+        // Filtrage par prix maximum
+        if ($request->filled('max_price')) {
+            $query->where('price', '<=', $request->max_price);
+        }
+
+        $products = $query->get();
+        $categories = Category::all(); // Pour le menu déroulant de filtrage
+
+        return view('products.index', compact('products', 'categories'));
     }
 
     public function create()
@@ -61,6 +85,12 @@ class ProductController extends Controller
 
     return redirect()->route('products.index')->with('success', 'Produit ajouté avec succès !');
 }
+public function edit(Product $product)
+{
+    $categories = Category::all(); // pour le select
+    return view('products.edit', compact('product', 'categories'));
+}
+
 
 
     public function update(Request $request, Product $product)
