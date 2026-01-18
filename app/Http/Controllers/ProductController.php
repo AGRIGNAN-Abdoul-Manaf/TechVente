@@ -8,12 +8,6 @@ use App\Models\Category;
 
 class ProductController extends Controller
 {
-   public function publicIndex()
-{
-    $products = Product::where('stock', '>', 0)->get(); // seulement les produits disponibles
-    return view('products.public', compact('products'));
-}
-
 
     public function __construct()
     {
@@ -77,7 +71,7 @@ class ProductController extends Controller
     if ($request->hasFile('image')) {
         $image = $request->file('image');
         $imageName = time() . '_' . $image->getClientOriginalName();
-        $image->storeAs('public/products', $imageName);
+        $image->storeAs('products', $imageName, 'public');
         $product->image = $imageName;
     }
 
@@ -107,7 +101,10 @@ public function edit(Product $product)
         $data = $request->only('name', 'price', 'quantity', 'description', 'category_id');
 
         if ($request->hasFile('image')) {
-            $data['image'] = $request->file('image')->store('products', 'public');
+            $image = $request->file('image');
+            $imageName = time() . '_' . $image->getClientOriginalName();
+            $image->storeAs('products', $imageName, 'public');
+            $data['image'] = $imageName;
         }
 
         $product->update($data);

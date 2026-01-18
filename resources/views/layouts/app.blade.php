@@ -27,7 +27,7 @@
             <li><a href="{{ route('clients.index') }}">Clients</a></li>
             <li><a href="{{ route('sales.index') }}">Ventes</a></li>
             <li><a href="{{ route('reports.index') }}">Rapports</a></li>
-            <li><a href="{{ route('products.public') }}" class="nav-link">Produits</a></li>
+
 
         </ul>
 

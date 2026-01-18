@@ -1,24 +1,42 @@
-@extends('layouts.app')
+@extends('layout')
+
+@section('title', 'Détails du Produit')
 
 @section('content')
 <div class="max-w-4xl mx-auto mt-8 p-6 bg-white rounded-xl shadow-lg border border-gray-200">
 
-    <!-- Titre du produit -->
-    <h1 class="text-4xl font-extrabold text-green-700 mb-6">{{ $product->name }}</h1>
-
-    <!-- Détails du produit -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div>
-            <p class="text-gray-700"><span class="font-semibold">Catégorie :</span> {{ $product->category->name ?? '-' }}</p>
-            <p class="text-gray-700"><span class="font-semibold">Prix :</span> {{ number_format($product->price, 0, ',', ' ') }} FCFA</p>
-            <p class="text-gray-700"><span class="font-semibold">Quantité en stock :</span> {{ $product->quantity }}</p>
+    <div class="flex flex-col md:flex-row gap-8">
+        <!-- Image du produit -->
+        <div class="md:w-1/3">
+            @if($product->image)
+                <img src="{{ asset('storage/products/' . $product->image) }}" 
+                     alt="{{ $product->name }}" 
+                     class="w-full h-auto object-cover rounded-lg shadow-md border border-gray-200">
+            @else
+                <div class="w-full h-48 bg-gray-100 flex items-center justify-center rounded-lg border border-dashed border-gray-300">
+                    <span class="text-gray-400 italic">Pas d'image</span>
+                </div>
+            @endif
         </div>
 
-        <div>
-            <p class="text-gray-700"><span class="font-semibold">Description :</span></p>
-            <p class="text-gray-600 mt-1">{{ $product->description }}</p>
+        <!-- Détails du produit -->
+        <div class="md:w-2/3">
+            <h1 class="text-4xl font-extrabold text-indigo-800 mb-6">{{ $product->name }}</h1>
+            
+            <div class="space-y-4">
+                <p class="text-gray-700"><span class="font-semibold text-indigo-600">Catégorie :</span> {{ $product->category->name ?? '-' }}</p>
+                <p class="text-gray-700"><span class="font-semibold text-indigo-600">Prix :</span> <span class="text-xl font-bold text-green-600">{{ number_format($product->price, 0, ',', ' ') }} FCFA</span></p>
+                <p class="text-gray-700"><span class="font-semibold text-indigo-600">Quantité en stock :</span> {{ $product->quantity }}</p>
+                
+                <div class="mt-4">
+                    <p class="text-gray-700 font-semibold text-indigo-600">Description :</p>
+                    <p class="text-gray-600 mt-1 leading-relaxed">{{ $product->description }}</p>
+                </div>
+            </div>
         </div>
     </div>
+
+
 
     <!-- Boutons -->
     <div class="mt-6 flex flex-wrap gap-3">

@@ -73,9 +73,9 @@
         <a href="{{ route('register') }}" class="btn btn-success btn-lg">Créer un compte</a>
     </div>
 
+
     <!-- Footer -->
     <footer class="text-center mt-5 mb-3">
         <p>© 2026 TechVente. Tous droits réservés.</p>
-    </footer>
-</div>
+    </footer></div>
 @endsection

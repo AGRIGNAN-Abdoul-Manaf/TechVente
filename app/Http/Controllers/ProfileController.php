@@ -34,7 +34,7 @@ class ProfileController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255|unique:users,email,' . $user->id,
             'password' => 'nullable|string|confirmed|min:6',
-            'profile_picture' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'profile_picture' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:10240',
         ]);
 
         // Gestion de l'image de profil

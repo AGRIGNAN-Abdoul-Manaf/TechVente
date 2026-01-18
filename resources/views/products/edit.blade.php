@@ -1,10 +1,12 @@
-@extends('layouts.app')
+@extends('layout')
+
+@section('title', 'Modifier le Produit')
 
 @section('content')
 <div class="edit-product-container">
-    <h1 class="page-title">Edit Product</h1>
+    <h1 class="page-title">Modifier le Produit</h1>
 
-    <form action="{{ route('products.update', $product->id) }}" method="POST" class="form-card">
+    <form action="{{ route('products.update', $product->id) }}" method="POST" enctype="multipart/form-data" class="form-card">
         @csrf
         @method('PUT')
 
@@ -39,12 +41,42 @@
             <textarea name="description" id="description" rows="4" required>{{ $product->description }}</textarea>
         </div>
 
+        <div class="form-group">
+            <label for="image">Product Image:</label>
+            <input type="file" name="image" id="imageInput" accept="image/*">
+            @if($product->image)
+                <img id="preview" src="{{ asset('storage/products/' . $product->image) }}" 
+                     alt="Aperçu" class="mt-2 w-40 h-40 object-cover rounded-md">
+            @else
+                <img id="preview" src="#" alt="Aperçu" class="mt-2 hidden w-40 h-40 object-cover rounded-md">
+            @endif
+        </div>
+
         <div class="form-buttons">
             <button type="submit" class="btn btn-success">Update</button>
             <a href="{{ route('products.index') }}" class="btn btn-secondary">Cancel</a>
         </div>
     </form>
 </div>
+@endsection
+
+@section('scripts')
+<script>
+    const imageInput = document.getElementById('imageInput');
+    const preview = document.getElementById('preview');
+
+    imageInput.addEventListener('change', function() {
+        const file = this.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                preview.src = e.target.result;
+                preview.classList.remove('hidden');
+            }
+            reader.readAsDataURL(file);
+        }
+    });
+</script>
 @endsection
 <style>
     /* Container */

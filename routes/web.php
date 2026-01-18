@@ -84,21 +84,17 @@ Route::middleware(['auth'])->group(function () {
     // 🧾 Historique des achats d’un client
     Route::get('/clients/{client}/history', [ClientController::class, 'history'])
         ->name('clients.history');
-        // Page d'accueil publique
-        // Route pour la page Termes et Conditions
-Route::get('/terms', function () {
-    return view('terms');
-})->name('terms');
+    // ⚙️ Paramètres & Termes
+    Route::get('/settings/terms', [App\Http\Controllers\SettingController::class, 'editTerms'])->name('settings.terms.edit');
+    Route::post('/settings/terms', [App\Http\Controllers\SettingController::class, 'updateTerms'])->name('settings.terms.update');
 
-Route::get('/privacy', function () {
-    return view('privacy');
-})->name('privacy');
-// Route publique pour afficher tous les produits
-Route::get('/produits', [App\Http\Controllers\ProductController::class, 'publicIndex'])->name('products.public');
+    // Route publique (ou protégée par auth ici) pour afficher les Termes
+    Route::get('/terms', [App\Http\Controllers\SettingController::class, 'showTerms'])->name('terms');
 
+    Route::get('/privacy', function () {
+        return view('privacy');
+    })->name('privacy');
 
-Route::get('/produits', [ProductController::class, 'publicIndex'])
-    ->name('products.public');
 
     
 
